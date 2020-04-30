@@ -6,6 +6,8 @@ import "./AddNote.css";
 const Required = () => (
   <span className='AddBookmark__required'>*</span>
 )
+
+//
 export default class AddNote extends Component {
   static contextType = ApiContext;
   static defaultProps = {
@@ -18,7 +20,7 @@ export default class AddNote extends Component {
 
   handleNoteSubmit = e => {
     e.preventDefault();
-
+    const { folders } = this.context
     const { name, folder, content } = e.target;
     const newNote = {
       name: name.value,
