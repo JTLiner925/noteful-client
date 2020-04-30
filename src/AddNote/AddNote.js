@@ -20,7 +20,7 @@ export default class AddNote extends Component {
 
   handleNoteSubmit = e => {
     e.preventDefault();
-    const { folders } = this.context
+    // const { folders } = this.context
     const { name, folder, content } = e.target;
     const newNote = {
       name: name.value,
@@ -28,7 +28,7 @@ export default class AddNote extends Component {
       content: content.value
     };
     this.setState({ error: null });
-    fetch(`${config.API_ENDPOINT}/folders`, {
+    fetch(`${config.API_ENDPOINT}/notes`, {
       method: "POST",
       body: JSON.stringify(newNote),
       headers: {
@@ -62,7 +62,7 @@ export default class AddNote extends Component {
     return (
       <section>
         <h2>Create a note</h2>
-        <form className="AddNote_form" onSubmit={this.handleSubmit}>
+        <form className="AddNote_form" onSubmit={this.handleNoteSubmit}>
           <div className="AddNote__error" role="alert">
             {error && <p>{error.message}</p>}
           </div>

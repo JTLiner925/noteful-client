@@ -52,6 +52,7 @@ class App extends Component {
     }
     handleAddNote = note => {
         this.setState({
+            
             note: [...this.state.notes, note]
         })
     }
@@ -68,7 +69,7 @@ class App extends Component {
                 ))}
                 <Route path="/note/:noteId" component={NotePageNav} />
                 <Route path="/add-folder" value=''component={AddFolder} />
-                <Route path="/add-note"  component={AddNote} />
+                <Route path="/add-note"  value='' component={AddNote} />
             </>
         );
     }
