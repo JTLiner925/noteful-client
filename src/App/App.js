@@ -51,9 +51,10 @@ class App extends Component {
         })
     }
     handleAddNote = note => {
+        console.log(note)
         this.setState({
             
-            note: [...this.state.notes, note]
+            notes: [...this.state.notes, note]
         })
     }
     renderNavRoutes() {

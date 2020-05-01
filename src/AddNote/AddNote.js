@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import ApiContext from "../ApiContext";
+import ValidationError from  '../ValidationError';
 import config from "../config";
 import "./AddNote.css";
 
-const Required = () => (
-  <span className='AddBookmark__required'>*</span>
-)
+const Required = () => <span className="AddBookmark__required">*</span>;
 
 //
 export default class AddNote extends Component {
@@ -15,18 +14,33 @@ export default class AddNote extends Component {
     folders: []
   };
   state = {
-    error: null
+    selectedDropdown: "none",
+    name: {
+      value: "",
+      touched: false,
+    },
+    content: {
+      value: "",
+      touched: false,
+    },
+    error: {
+      message:'',
+    }
   };
 
   handleNoteSubmit = e => {
     e.preventDefault();
     // const { folders } = this.context
-    const { name, folder, content } = e.target;
+    const { name, selectedDropdown, content } = this.state;
     const newNote = {
-      name: name.value,
-      folder: folder.value,
-      content: content.value
+      [name.value]: name,
+      folderId: selectedDropdown,
+      [content.value]: content
     };
+    if(selectedDropdown === 'none'){
+      this.setState({error: {message:'please select from dropdown'}})
+      return 
+    }
     this.setState({ error: null });
     fetch(`${config.API_ENDPOINT}/notes`, {
       method: "POST",
@@ -37,16 +51,18 @@ export default class AddNote extends Component {
     })
       .then(res => {
         if (!res.ok) {
-          return res.json().then(error => {
-            throw error;
-          });
+          return (
+            res
+              .json()
+              // console.log(res.json())
+              .then(error => {
+                throw error;
+              })
+          );
         }
         return res.json();
       })
       .then(data => {
-        name.value = "";
-        folder.value = "";
-        content.value = "";
         this.context.addNote(data);
         this.props.history.push("/");
       })
@@ -57,68 +73,103 @@ export default class AddNote extends Component {
   handleClickCancel = () => {
     this.props.history.push("/");
   };
+  handleInput = e => {
+    this.setState({
+      [e.target.name]: {value: e.target.value, touched: true}
+
+    });
+  };
+  validateName(){
+    const name = this.state.name.value.trim();
+    if(name.length === 0){
+      return 'Name is required';
+    }
+    // else if (name.length < 2){
+    //   return 'Name must be at least 2 characters long';
+    // }
+  }
+  validateContent(){
+    const name = this.state.content.value.trim();
+    if(name.length === 0){
+      return 'Some content is required';
+    }
+    // else if (name.length < 2){
+    //   return 'Name must be at least 2 characters long';
+    // }
+  }
   render() {
+    const nameError = this.validateName();
+    const contentError = this.validateContent();
     const { error } = this.state;
+    console.log(this.state);
     return (
-      <section>
-        <h2>Create a note</h2>
-        <form className="AddNote_form" onSubmit={this.handleNoteSubmit}>
-          <div className="AddNote__error" role="alert">
-            {error && <p>{error.message}</p>}
-          </div>
-          <div>
-            <label htmlFor='note'>
-              Note
-              {' '}
-              <Required />
-            </label>
-            <input
-              type='text'
-              name='note'
-              id='note'
-              placeholder='New Note'
-              required
-            />            
-          </div>
-          <div>
-            <label htmlFor='folder'>
-              Folder
-              {' '}
-              <Required />
-            </label>
-            <input
-              type='text'
-              name='folder'
-              id='folder'
-              placeholder='current folder'
-              required
-            />           
-          </div>
-          <div>
-            <label htmlFor='content'>
-              Content
-              {' '}
-              <Required />
-            </label>
-            <input
-              type='text'
-              name='content'
-              id='content'
-              placeholder='description'
-              required
-            />            
-          </div>
-          <div className='AddNote__buttons'>
-            <button type='button' onClick={this.handleClickCancel}>
-              Cancel
-            </button>
-            {' '}
-            <button type='submit'>
-              Save
-            </button>
-          </div>
-        </form>
-      </section>
+      <ApiContext.Consumer>
+        {value => (
+          <section>
+            <h2>Create a note</h2>
+            <form className="AddNote_form" onSubmit={this.handleNoteSubmit}>
+              <div className="AddNote__error" role="alert">
+                {error ? <p>{error.message}</p>: null}
+              </div>
+              <div>
+                <label htmlFor="note">
+                  Note <Required />
+                </label>
+                <input
+                  onChange={this.handleInput}
+                  type="text"
+                  name="name"
+                  id="note"
+                  placeholder="New Note"
+                  // required
+                />
+                {this.state.name.touched && <ValidationError message={nameError}/>}              </div>
+              <div>
+                <label htmlFor="folder">Select Folder <Required /></label>
+                <select value={this.state.selectedDropdown} onChange={this.handleInput} name="selectedDropdown" required>
+                  <option value="none" disabled hidden>
+                    No Filter
+                  </option>
+                  {value.folders.map(folder => {
+                    return (
+                      <option key={folder.id} value={folder.id}>
+                        {folder.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="content">
+                  Content <Required />
+                </label>
+                <input
+                  onChange={this.handleInput}
+                  type="text"
+                  name="content"
+                  id="content"
+                  placeholder="description"
+                  // required
+                />
+                {this.state.content.touched && <ValidationError message={contentError}/>}
+              </div>
+              <div className="AddNote__buttons">
+                <button type="button" onClick={this.handleClickCancel}>
+                  Cancel
+                </button>{" "}
+                <button type="submit"
+                disabled={
+                  this.validateName() ||
+                  this.validateContent() 
+                  //need to add selectDropdown...to keep Save greyed-out
+                }
+              >
+                Save</button>
+              </div>
+            </form>
+          </section>
+        )}
+      </ApiContext.Consumer>
     );
   }
 }
