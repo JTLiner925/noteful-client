@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ApiContext from "../ApiContext";
-import ValidationError from  '../ValidationError';
+import PropTypes from "prop-types";
+import ValidationError from "../ValidationError";
 import config from "../config";
 import "./AddNote.css";
 
@@ -17,29 +18,28 @@ export default class AddNote extends Component {
     selectedDropdown: "none",
     name: {
       value: "",
-      touched: false,
+      touched: false
     },
     content: {
       value: "",
-      touched: false,
+      touched: false
     },
     error: {
-      message:'',
+      message: ""
     }
   };
 
   handleNoteSubmit = e => {
     e.preventDefault();
-    // const { folders } = this.context
     const { name, selectedDropdown, content } = this.state;
     const newNote = {
       [name.value]: name,
       folderId: selectedDropdown,
       [content.value]: content
     };
-    if(selectedDropdown === 'none'){
-      this.setState({error: {message:'please select from dropdown'}})
-      return 
+    if (selectedDropdown === "none") {
+      this.setState({ error: { message: "please select from dropdown" } });
+      return;
     }
     this.setState({ error: null });
     fetch(`${config.API_ENDPOINT}/notes`, {
@@ -75,27 +75,20 @@ export default class AddNote extends Component {
   };
   handleInput = e => {
     this.setState({
-      [e.target.name]: {value: e.target.value, touched: true}
-
+      [e.target.name]: { value: e.target.value, touched: true }
     });
   };
-  validateName(){
+  validateName() {
     const name = this.state.name.value.trim();
-    if(name.length === 0){
-      return 'Name is required';
+    if (name.length === 0) {
+      return "Name is required";
     }
-    // else if (name.length < 2){
-    //   return 'Name must be at least 2 characters long';
-    // }
   }
-  validateContent(){
+  validateContent() {
     const name = this.state.content.value.trim();
-    if(name.length === 0){
-      return 'Some content is required';
+    if (name.length === 0) {
+      return "Some content is required";
     }
-    // else if (name.length < 2){
-    //   return 'Name must be at least 2 characters long';
-    // }
   }
   render() {
     const nameError = this.validateName();
@@ -109,7 +102,7 @@ export default class AddNote extends Component {
             <h2>Create a note</h2>
             <form className="AddNote_form" onSubmit={this.handleNoteSubmit}>
               <div className="AddNote__error" role="alert">
-                {error ? <p>{error.message}</p>: null}
+                {error ? <p>{error.message}</p> : null}
               </div>
               <div>
                 <label htmlFor="note">
@@ -117,16 +110,27 @@ export default class AddNote extends Component {
                 </label>
                 <input
                   onChange={this.handleInput}
+                  defaultValue={this.props.name}
                   type="text"
                   name="name"
                   id="note"
                   placeholder="New Note"
                   // required
                 />
-                {this.state.name.touched && <ValidationError message={nameError}/>}              </div>
+                {this.state.name.touched && (
+                  <ValidationError message={nameError} />
+                )}{" "}
+              </div>
               <div>
-                <label htmlFor="folder">Select Folder <Required /></label>
-                <select value={this.state.selectedDropdown} onChange={this.handleInput} name="selectedDropdown" required>
+                <label htmlFor="folder">
+                  Select Folder <Required />
+                </label>
+                <select
+                  value={this.state.selectedDropdown}
+                  onChange={this.handleInput}
+                  name="selectedDropdown"
+                  required
+                >
                   <option value="none" disabled hidden>
                     No Filter
                   </option>
@@ -144,6 +148,7 @@ export default class AddNote extends Component {
                   Content <Required />
                 </label>
                 <input
+                  defaultValue={this.props.content}
                   onChange={this.handleInput}
                   type="text"
                   name="content"
@@ -151,20 +156,23 @@ export default class AddNote extends Component {
                   placeholder="description"
                   // required
                 />
-                {this.state.content.touched && <ValidationError message={contentError}/>}
+                {this.state.content.touched && (
+                  <ValidationError message={contentError} />
+                )}
               </div>
               <div className="AddNote__buttons">
                 <button type="button" onClick={this.handleClickCancel}>
                   Cancel
                 </button>{" "}
-                <button type="submit"
-                disabled={
-                  this.validateName() ||
-                  this.validateContent() 
-                  //need to add selectDropdown...to keep Save greyed-out
-                }
-              >
-                Save</button>
+                <button
+                  type="submit"
+                  disabled={
+                    this.validateName() || this.validateContent()
+                    //need to add selectDropdown...to keep Save greyed-out
+                  }
+                >
+                  Save
+                </button>
               </div>
             </form>
           </section>
@@ -173,3 +181,18 @@ export default class AddNote extends Component {
     );
   }
 }
+AddNote.defaultProps ={
+  name: '',
+  content: '',
+}
+AddNote.propTypes = {
+  notes: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string.isRequired,
+      modified: PropTypes.string.isRequired,
+      folderId: PropTypes.string,
+      content: PropTypes.string.isRequired
+    })
+  )
+};

@@ -39,7 +39,6 @@ export default class AddFolder extends Component {
           });
         }
         return res.json();
-        // console.log(res.json());
       })
       .then(data => {
         folder.value = "";
