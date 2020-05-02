@@ -109,7 +109,8 @@ class App extends Component {
                             <FontAwesomeIcon icon="check-double" />
                         </h1>
                     </header>
-                    <main className="App__main">{this.renderMainRoutes()}</main>
+                    <main className="App__main">
+                    {this.renderMainRoutes()}</main>
                 </div>
             </ApiContext.Provider>
         );

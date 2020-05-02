@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ApiContext from "../ApiContext";
+import PropTypes from 'prop-types';
 import config from "../config";
 import "./AddFolder.css";
 
@@ -38,6 +39,7 @@ export default class AddFolder extends Component {
           });
         }
         return res.json();
+        // console.log(res.json());
       })
       .then(data => {
         folder.value = "";
@@ -53,6 +55,7 @@ export default class AddFolder extends Component {
   };
 
   render() {
+    console.log(this.props)
     const { error } = this.state;
     return (
       <section className='AddFolder'>
@@ -68,6 +71,7 @@ export default class AddFolder extends Component {
               <Required />
             </label>
             <input
+            defaultValue={this.props.name}
               type='text'
               name='folder'
               id='folder'
@@ -88,4 +92,10 @@ export default class AddFolder extends Component {
       </section>
     );
   }
+}
+AddFolder.defaultProps ={
+  name: 'hey'
+}
+AddFolder.propTypes = {
+  name: PropTypes.string.isRequired
 }
