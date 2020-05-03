@@ -15,7 +15,10 @@ export default class AddNote extends Component {
     folders: []
   };
   state = {
-    selectedDropdown: "none",
+    selectedDropdown: {
+      value: "none",
+      touched: false,
+    },
     name: {
       value: "",
       touched: false
@@ -33,14 +36,14 @@ export default class AddNote extends Component {
     e.preventDefault();
     const { name, selectedDropdown, content } = this.state;
     const newNote = {
-      [name.value]: name,
-      folderId: selectedDropdown,
-      [content.value]: content
+      name: name.value,
+      folderId: selectedDropdown.value,
+      content: content.value
     };
-    if (selectedDropdown === "none") {
-      this.setState({ error: { message: "please select from dropdown" } });
-      return;
-    }
+    // if (selectedDropdown === "none") {
+    //   this.setState({ error: { message: "please select from dropdown" } });
+    //   return;
+    // }
     this.setState({ error: null });
     fetch(`${config.API_ENDPOINT}/notes`, {
       method: "POST",
@@ -54,7 +57,6 @@ export default class AddNote extends Component {
           return (
             res
               .json()
-              // console.log(res.json())
               .then(error => {
                 throw error;
               })
@@ -74,6 +76,7 @@ export default class AddNote extends Component {
     this.props.history.push("/");
   };
   handleInput = e => {
+    console.log(e.target.name)
     this.setState({
       [e.target.name]: { value: e.target.value, touched: true }
     });
@@ -94,7 +97,7 @@ export default class AddNote extends Component {
     const nameError = this.validateName();
     const contentError = this.validateContent();
     const { error } = this.state;
-    console.log(this.state);
+    console.log(this.props)
     return (
       <ApiContext.Consumer>
         {value => (
@@ -110,7 +113,7 @@ export default class AddNote extends Component {
                 </label>
                 <input
                   onChange={this.handleInput}
-                  defaultValue={this.props.name}
+                  value={this.state.name.value}
                   type="text"
                   name="name"
                   id="note"
@@ -126,7 +129,7 @@ export default class AddNote extends Component {
                   Select Folder <Required />
                 </label>
                 <select
-                  value={this.state.selectedDropdown}
+                  value={this.state.selectedDropdown.value}
                   onChange={this.handleInput}
                   name="selectedDropdown"
                   required
@@ -135,6 +138,7 @@ export default class AddNote extends Component {
                     No Filter
                   </option>
                   {value.folders.map(folder => {
+                    // console.log(folder)
                     return (
                       <option key={folder.id} value={folder.id}>
                         {folder.name}
@@ -148,7 +152,7 @@ export default class AddNote extends Component {
                   Content <Required />
                 </label>
                 <input
-                  defaultValue={this.props.content}
+                  value={this.state.content.value}
                   onChange={this.handleInput}
                   type="text"
                   name="content"
@@ -167,7 +171,8 @@ export default class AddNote extends Component {
                 <button
                   type="submit"
                   disabled={
-                    this.validateName() || this.validateContent()
+                    this.validateName() || this.validateContent() ||
+                    this.state.selectedDropdown.value === 'none'
                     //need to add selectDropdown...to keep Save greyed-out
                   }
                 >
@@ -181,18 +186,7 @@ export default class AddNote extends Component {
     );
   }
 }
-AddNote.defaultProps ={
-  name: '',
-  content: '',
-}
+
 AddNote.propTypes = {
-  notes: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string.isRequired,
-      modified: PropTypes.string.isRequired,
-      folderId: PropTypes.string,
-      content: PropTypes.string.isRequired
-    })
-  )
+ history: PropTypes.object,
 };

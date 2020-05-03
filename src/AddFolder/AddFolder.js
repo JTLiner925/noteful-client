@@ -96,5 +96,5 @@ AddFolder.defaultProps ={
   name: 'hey'
 }
 AddFolder.propTypes = {
-  name: PropTypes.string.isRequired
+  history: PropTypes.object,
 }

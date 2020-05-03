@@ -22,6 +22,7 @@ export default class NotePageNav extends React.Component {
     const note = findNote(notes, noteId) || {}
     const folder = findFolder(folders, note.folderId)
     return (
+      
       <div className='NotePageNav'>
         <CircleButton
           tag='button'
