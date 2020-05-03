@@ -54,7 +54,6 @@ export default class AddFolder extends Component {
   };
 
   render() {
-    console.log(this.props)
     const { error } = this.state;
     return (
       <section className='AddFolder'>
@@ -96,5 +95,8 @@ AddFolder.defaultProps ={
   name: 'hey'
 }
 AddFolder.propTypes = {
+  match: PropTypes.object,
+  location: PropTypes.object,
   history: PropTypes.object,
+  name: PropTypes.string
 }

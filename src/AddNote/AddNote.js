@@ -17,7 +17,7 @@ export default class AddNote extends Component {
   state = {
     selectedDropdown: {
       value: "none",
-      touched: false,
+      touched: false
     },
     name: {
       value: "",
@@ -54,13 +54,9 @@ export default class AddNote extends Component {
     })
       .then(res => {
         if (!res.ok) {
-          return (
-            res
-              .json()
-              .then(error => {
-                throw error;
-              })
-          );
+          return res.json().then(error => {
+            throw error;
+          });
         }
         return res.json();
       })
@@ -76,7 +72,6 @@ export default class AddNote extends Component {
     this.props.history.push("/");
   };
   handleInput = e => {
-    console.log(e.target.name)
     this.setState({
       [e.target.name]: { value: e.target.value, touched: true }
     });
@@ -97,7 +92,6 @@ export default class AddNote extends Component {
     const nameError = this.validateName();
     const contentError = this.validateContent();
     const { error } = this.state;
-    console.log(this.props)
     return (
       <ApiContext.Consumer>
         {value => (
@@ -118,7 +112,6 @@ export default class AddNote extends Component {
                   name="name"
                   id="note"
                   placeholder="New Note"
-                  // required
                 />
                 {this.state.name.touched && (
                   <ValidationError message={nameError} />
@@ -138,7 +131,7 @@ export default class AddNote extends Component {
                     No Filter
                   </option>
                   {value.folders.map(folder => {
-                    // console.log(folder)
+                  
                     return (
                       <option key={folder.id} value={folder.id}>
                         {folder.name}
@@ -158,7 +151,7 @@ export default class AddNote extends Component {
                   name="content"
                   id="content"
                   placeholder="description"
-                  // required
+                 
                 />
                 {this.state.content.touched && (
                   <ValidationError message={contentError} />
@@ -171,9 +164,9 @@ export default class AddNote extends Component {
                 <button
                   type="submit"
                   disabled={
-                    this.validateName() || this.validateContent() ||
-                    this.state.selectedDropdown.value === 'none'
-                    //need to add selectDropdown...to keep Save greyed-out
+                    this.validateName() ||
+                    this.validateContent() ||
+                    this.state.selectedDropdown.value === "none"
                   }
                 >
                   Save
@@ -188,5 +181,7 @@ export default class AddNote extends Component {
 }
 
 AddNote.propTypes = {
- history: PropTypes.object,
+  match: PropTypes.object,
+  location: PropTypes.object,
+  history: PropTypes.object
 };

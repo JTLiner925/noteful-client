@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 export default class Error extends Component {
   constructor(props) {
@@ -11,12 +12,12 @@ export default class Error extends Component {
     return { hasError: true };
   }
   render() {
-    console.log(props)
-    if (this.state.hasError) {      
-      return (
-        <h2>Something went wrong.</h2>
-      );
+    if (this.state.hasError) {
+      return <h2>Something went wrong.</h2>;
     }
     return this.props.children;
-  } 
+  }
 }
+Error.propTypes = {
+  children: PropTypes.object
+};
