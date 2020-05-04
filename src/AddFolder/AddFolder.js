@@ -92,11 +92,11 @@ export default class AddFolder extends Component {
   }
 }
 AddFolder.defaultProps ={
-  name: 'hey'
+  name: ''
 }
 AddFolder.propTypes = {
   match: PropTypes.object,
   location: PropTypes.object,
   history: PropTypes.object,
-  name: PropTypes.string
+  name: PropTypes.string.isRequired
 }
