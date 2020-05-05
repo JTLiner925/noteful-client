@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import ApiContext from "../ApiContext";
 import PropTypes from "prop-types";
-import { format } from "date-fns";
 import ValidationError from "../ValidationError";
 import config from "../config";
 import "./AddNote.css";
 
 const Required = () => <span className="AddBookmark__required">*</span>;
 
-//
 export default class AddNote extends Component {
   static contextType = ApiContext;
   static defaultProps = {
@@ -24,9 +22,6 @@ export default class AddNote extends Component {
       value: "",
       touched: false
     },
-    modified: {
-      value: '',
-    },
     content: {
       value: "",
       touched: false
@@ -38,17 +33,13 @@ export default class AddNote extends Component {
 
   handleNoteSubmit = e => {
     e.preventDefault();
-    const { name, modified, selectedDropdown, content } = this.state;
+    const { name, selectedDropdown, content } = this.state;
     const newNote = {
       name: name.value,
-      modified: modified.value,
+      modified: new Date(),
       folderId: selectedDropdown.value,
       content: content.value
     };
-    // if (selectedDropdown === "none") {
-    //   this.setState({ error: { message: "please select from dropdown" } });
-    //   return;
-    // }
     this.setState({ error: null });
     fetch(`${config.API_ENDPOINT}/notes`, {
       method: "POST",
@@ -162,12 +153,6 @@ export default class AddNote extends Component {
                   <ValidationError message={contentError} />
                 )}
               </div>
-              <div className="Note__dates">
-          <div className="Note__dates-modified">
-            Modified{" "}
-            <span className="Date" value={this.state.modified.value}>{format(this.state.modified.value, "Do MMM YYYY")}</span>
-          </div>
-        </div>
               <div className="AddNote__buttons">
                 <button type="button" onClick={this.handleClickCancel}>
                   Cancel
