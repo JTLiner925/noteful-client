@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 export default function NavCircleButton(props) {
   const { tag, className, children, ...otherProps } = props
+  console.log(props)
   return React.createElement(
     props.tag,
     {

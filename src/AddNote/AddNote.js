@@ -85,6 +85,7 @@ export default class AddNote extends Component {
     }
   }
   render() {
+    console.log(this.props)
     const nameError = this.validateName();
     const contentError = this.validateContent();
     const { error } = this.state;
@@ -177,7 +178,5 @@ export default class AddNote extends Component {
 }
 
 AddNote.propTypes = {
-  match: PropTypes.object,
-  location: PropTypes.object,
   history: PropTypes.object
 };

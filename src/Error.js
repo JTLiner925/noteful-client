@@ -18,6 +18,7 @@ export default class Error extends Component {
     return this.props.children;
   }
 }
+
 Error.propTypes = {
   children: PropTypes.object
 };
