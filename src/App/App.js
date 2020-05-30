@@ -19,8 +19,8 @@ class App extends Component {
 
   componentDidMount() {
     Promise.all([
-      fetch(`${config.API_ENDPOINT}/notes`),
-      fetch(`${config.API_ENDPOINT}/folders`)
+      fetch(`${config.API_ENDPOINT}notes`),
+      fetch(`${config.API_ENDPOINT}folders`)
     ])
       .then(([notesRes, foldersRes]) => {
         if (!notesRes.ok)
@@ -34,6 +34,7 @@ class App extends Component {
         ])
       })
       .then(([notes, folders]) => {
+        console.log(notes, folders)
         this.setState({ notes, folders })
       })
       .catch(error => {
