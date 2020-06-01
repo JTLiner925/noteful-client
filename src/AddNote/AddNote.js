@@ -1,84 +1,77 @@
-import React, { Component } from 'react'
-import NotefulForm from '../NotefulForm/NotefulForm'
-import ApiContext from '../ApiContext'
-import config from '../config'
-import './AddNote.css'
+import React, { Component } from "react";
+import NotefulForm from "../NotefulForm/NotefulForm";
+import ApiContext from "../ApiContext";
+import config from "../config";
+import "./AddNote.css";
 
 export default class AddNote extends Component {
   static defaultProps = {
     history: {
-      push: () => { }
+      push: () => {},
     },
-  }
+  };
   static contextType = ApiContext;
 
-  handleSubmit = e => {
-    e.preventDefault()
+  handleSubmit = (e) => {
+    e.preventDefault();
     const newNote = {
-      note_name: e.target['note_name'].value,
-      content: e.target['content'].value,
-      folder_id: e.target['folder_id'].value,
+      note_name: e.target["note_name"].value,
+      content: e.target["content"].value,
+      folder_id: e.target["folder_id"].value,
       modified: new Date(),
-    }
+    };
     fetch(`${config.API_ENDPOINT}notes`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'content-type': 'application/json'
+        "content-type": "application/json",
       },
       body: JSON.stringify(newNote),
     })
-      .then(res => {
-        if (!res.ok)
-          return res.json().then(e => Promise.reject(e))
-        return res.json()
+      .then((res) => {
+        if (!res.ok) return res.json().then((e) => Promise.reject(e));
+        return res.json();
       })
-      .then(note => {
-        this.context.addNote(note)
-        this.props.history.push(`/`)
+      .then((note) => {
+        this.context.addNote(note);
+        this.props.history.push(`/`);
       })
-      .catch(error => {
-        console.error({ error })
-      })
-  }
+      .catch((error) => {
+        console.error({ error });
+      });
+  };
 
   render() {
-    const { folders=[] } = this.context
+    const { folders = [] } = this.context;
     return (
-      <section className='AddNote'>
+      <section className="AddNote">
         <h2>Create a note</h2>
         <NotefulForm onSubmit={this.handleSubmit}>
-          <div className='field'>
-            <label htmlFor='note-name-input'>
-              Name
-            </label>
-            <input type='text' id='note-name-input' name='note_name' />
+          <div className="field">
+            <label htmlFor="note-name-input">Name</label>
+            <input type="text" id="note-name-input" name="note_name" />
           </div>
-          <div className='field'>
-            <label htmlFor='note-content-input'>
-              Content
-            </label>
-            <textarea id='note-content-input' name='content' />
+          <div className="field">
+            <label htmlFor="note-content-input">Content</label>
+            <textarea id="note-content-input" name="content" />
           </div>
-          <div className='field'>
-            <label htmlFor='note-folder-select'>
-              Folder
-            </label>
-            <select id='note-folder-select' name='folder_id'>
-              <option key=''value={null}>...</option>
-              {folders.map(folder =>
+          <div className="field">
+            <label htmlFor="note-folder-select">Folder</label>
+            <select id="note-folder-select" name="folder_id">
+              <option key="" value={null}>
+                ...
+              </option>
+              {folders.map((folder) => (
                 <option key={folder.id} value={folder.id}>
                   {folder.folder_name}
                 </option>
-              )}
+              ))}
             </select>
           </div>
-          <div className='buttons'>
-            <button type='submit'>
-              Add note
-            </button>
+          <div className="buttons">
+            <button type="submit">Add note</button>
           </div>
         </NotefulForm>
       </section>
-    )
+    );
   }
 }
