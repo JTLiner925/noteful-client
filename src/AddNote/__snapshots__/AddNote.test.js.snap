@@ -7,7 +7,9 @@ exports[`AddNote component renders the complete form 1`] = `
   <h2>
     Create a note
   </h2>
-  <NotefulForm>
+  <NotefulForm
+    onSubmit={[Function]}
+  >
     <div
       className="field"
     >
@@ -18,6 +20,7 @@ exports[`AddNote component renders the complete form 1`] = `
       </label>
       <input
         id="note-name-input"
+        name="note_name"
         type="text"
       />
     </div>
@@ -31,6 +34,7 @@ exports[`AddNote component renders the complete form 1`] = `
       </label>
       <textarea
         id="note-content-input"
+        name="content"
       />
     </div>
     <div
@@ -43,8 +47,10 @@ exports[`AddNote component renders the complete form 1`] = `
       </label>
       <select
         id="note-folder-select"
+        name="folder_id"
       >
         <option
+          key=""
           value={null}
         >
           ...
