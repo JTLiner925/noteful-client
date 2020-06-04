@@ -21,6 +21,7 @@ export default class NoteListMain extends React.Component {
     const notesForFolder = getNotesForFolder(notes, folderId);
     return (
       <section className="NoteListMain">
+        <h1>this is it!</h1>
         <ul>
           {notesForFolder.map((note) => (
             <li key={note.id}>
