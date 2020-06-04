@@ -1,6 +1,7 @@
 {
   "version": 2,
   "alias": "noteful",
+  "n":"noteful-app",
   "routes": [
     {
       "src": "^/static/(.*)",
