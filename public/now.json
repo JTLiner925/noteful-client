@@ -1,11 +1,14 @@
-  
 {
   "version": 2,
-  "alias": "my-noteful-app",
-  "builds": [
-    { "src": "index.js", "use": "@now/node" }
-  ],
+  "alias": "noteful",
   "routes": [
-    { "src": "/.*", "dest": "/index.js" }
+    {
+      "src": "^/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": ".*",
+      "dest": "/index.html"
+    }
   ]
 }
