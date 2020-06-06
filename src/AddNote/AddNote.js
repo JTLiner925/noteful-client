@@ -48,7 +48,7 @@ export default class AddNote extends Component {
         <NotefulForm onSubmit={this.handleSubmit}>
           <div className="field">
             <label htmlFor="note-name-input">Name</label>
-            <input type="text" id="note-name-input" name="note_name" />
+            <input type="text" id="note-name-input" name="note_name" required/>
           </div>
           <div className="field">
             <label htmlFor="note-content-input">Content</label>
@@ -56,7 +56,7 @@ export default class AddNote extends Component {
           </div>
           <div className="field">
             <label htmlFor="note-folder-select">Folder</label>
-            <select id="note-folder-select" name="folder_id">
+            <select id="note-folder-select" name="folder_id" required>
               <option key="" value={null}>
                 ...
               </option>

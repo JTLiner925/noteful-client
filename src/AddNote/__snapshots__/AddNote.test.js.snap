@@ -21,6 +21,7 @@ exports[`AddNote component renders the complete form 1`] = `
       <input
         id="note-name-input"
         name="note_name"
+        required={true}
         type="text"
       />
     </div>
@@ -48,6 +49,7 @@ exports[`AddNote component renders the complete form 1`] = `
       <select
         id="note-folder-select"
         name="folder_id"
+        required={true}
       >
         <option
           key=""
